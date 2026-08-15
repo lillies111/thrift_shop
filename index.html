@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SECONDHAND NOIR — Curated Vintage & Thrift</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            noir:    '#0c0c0c',
+            offblack:'#111111',
+            card:    '#161616',
+            border:  '#2a2a2a',
+            muted:   '#6b6b6b',
+            light:   '#e8e5df',
+            accent:  '#c8a87a',   /* warm sand gold — thrift warmth */
+            tag:     '#1e1e1e',
+          },
+          fontFamily: {
+            display: ['"Bebas Neue"', 'sans-serif'],
+            body:    ['"DM Sans"', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* ── grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.35;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    /* ── nav underline hover ── */
+    .nav-link {
+      position: relative;
+      letter-spacing: 0.08em;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -2px;
+      width: 0; height: 1px;
+      background: #c8a87a;
+      transition: width 0.25s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* ── card image zoom ── */
+    .item-img { transition: transform 0.45s ease; }
+    .card-wrap:hover .item-img { transform: scale(1.04); }
+
+    /* ── filter pill active ── */
+    .filter-btn.active {
+      background: #c8a87a;
+      color: #0c0c0c;
+      border-color: #c8a87a;
+    }
+
+    /* ── card fade-in on filter ── */
+    .product-card {
+      animation: fadeUp 0.3s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+
+    /* ── marquee ── */
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-inner { animation: marquee 22s linear infinite; }
+  </style>
+</head>
+
+<body class="bg-noir text-light font-body antialiased">
+
+  <!-- ══════════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════════ -->
+  <header class="fixed top-0 inset-x-0 z-50 border-b border-border bg-noir/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-5 md:px-10 h-14 flex items-center justify-between">
+
+      <!-- Logo -->
+      <a href="#" class="font-display text-2xl tracking-widest text-light leading-none">
+        NOIR<span class="text-accent">FINDS</span>
+      </a>
+
+      <!-- Nav links (desktop) -->
+      <nav class="hidden md:flex items-center gap-8 text-xs uppercase text-muted font-body font-medium">
+        <a href="#catalog" class="nav-link hover:text-light transition-colors">Catalog</a>
+        <a href="#about"   class="nav-link hover:text-light transition-colors">About</a>
+        <a href="#contact" class="nav-link hover:text-light transition-colors">Contact</a>
+      </nav>
+
+      <!-- WhatsApp pill (desktop) -->
+      <!-- ✏️  REPLACE the number below with your WhatsApp number in international format, no spaces or + -->
+      <a href="https://wa.me/YOUR_NUMBER_HERE"
+         target="_blank"
+         class="hidden md:flex items-center gap-2 border border-accent/60 text-accent hover:bg-accent hover:text-noir transition-all px-4 py-1.5 text-xs uppercase tracking-widest font-medium">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        WhatsApp
+      </a>
+
+      <!-- Mobile menu hint -->
+      <a href="https://wa.me/YOUR_NUMBER_HERE" target="_blank"
+         class="md:hidden text-accent text-xs uppercase tracking-widest">
+        DM to Buy
+      </a>
+    </div>
+  </header>
+
+
+  <!-- ══════════════════════════════════════════
+       HERO
+  ══════════════════════════════════════════ -->
+  <section class="pt-14 min-h-[92vh] flex flex-col justify-end pb-12 px-5 md:px-10 relative overflow-hidden">
+
+    <!-- Background gradient blob -->
+    <div class="absolute top-0 right-0 w-[55vw] h-[55vw] max-w-2xl max-h-2xl rounded-full bg-accent/5 blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-10 w-[30vw] h-[30vw] max-w-sm rounded-full bg-accent/4 blur-[90px] pointer-events-none"></div>
+
+    <!-- Big eyebrow line -->
+    <p class="text-muted text-xs uppercase tracking-[0.3em] mb-4 font-medium">Est. 2024 · Algiers, DZ</p>
+
+    <!-- Hero headline -->
+    <h1 class="font-display text-[clamp(4rem,14vw,13rem)] leading-[0.88] tracking-tight text-light mb-6">
+      CURATED<br />
+      <span class="text-accent">VINTAGE</span><br />
+      &amp;&nbsp;THRIFT
+    </h1>
+
+    <!-- Sub line -->
+    <p class="text-muted text-sm md:text-base max-w-md leading-relaxed mb-8 font-light">
+      One-of-a-kind pieces. No restocks. Slide into the DM to claim yours before it's gone.
+    </p>
+
+    <!-- CTA row -->
+    <div class="flex flex-wrap items-center gap-4">
+      <a href="#catalog"
+         class="bg-accent text-noir font-medium text-sm uppercase tracking-widest px-7 py-3 hover:bg-light transition-colors">
+        Browse Pieces
+      </a>
+      <!-- ✏️  REPLACE number -->
+      <a href="https://wa.me/YOUR_NUMBER_HERE" target="_blank"
+         class="border border-border text-muted hover:text-light hover:border-light transition-colors text-sm uppercase tracking-widest px-7 py-3">
+        WhatsApp Us
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       MARQUEE TICKER
+  ══════════════════════════════════════════ -->
+  <div class="border-y border-border py-3 overflow-hidden bg-offblack">
+    <div class="marquee-inner flex gap-10 whitespace-nowrap text-xs uppercase tracking-[0.25em] text-muted w-max">
+      <!-- Doubled for seamless loop -->
+      <span>Vintage Finds</span><span class="text-accent/50">◆</span>
+      <span>Thrifted Gems</span><span class="text-accent/50">◆</span>
+      <span>DM to Reserve</span><span class="text-accent/50">◆</span>
+      <span>No Restocks</span><span class="text-accent/50">◆</span>
+      <span>One of a Kind</span><span class="text-accent/50">◆</span>
+      <span>Unique Pieces</span><span class="text-accent/50">◆</span>
+      <span>Vintage Finds</span><span class="text-accent/50">◆</span>
+      <span>Thrifted Gems</span><span class="text-accent/50">◆</span>
+      <span>DM to Reserve</span><span class="text-accent/50">◆</span>
+      <span>No Restocks</span><span class="text-accent/50">◆</span>
+      <span>One of a Kind</span><span class="text-accent/50">◆</span>
+      <span>Unique Pieces</span><span class="text-accent/50">◆</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       CATALOG SECTION
+  ══════════════════════════════════════════ -->
+  <section id="catalog" class="max-w-7xl mx-auto px-5 md:px-10 py-20">
+
+    <!-- Section header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+      <div>
+        <p class="text-muted text-xs uppercase tracking-[0.25em] mb-2">The Archive</p>
+        <h2 class="font-display text-5xl md:text-6xl text-light tracking-tight">Current Drops</h2>
+      </div>
+      <p class="text-muted text-sm max-w-xs leading-relaxed">
+        All items are pre-owned & verified. DM on WhatsApp to confirm availability.
+      </p>
+    </div>
+
+    <!-- ── Filter Bar ── -->
+    <div id="filter-bar" class="flex flex-wrap gap-2 mb-12">
+      <button class="filter-btn active" data-filter="all">
+        All
+      </button>
+      <button class="filter-btn" data-filter="Outerwear">Outerwear</button>
+      <button class="filter-btn" data-filter="Denim">Denim</button>
+      <button class="filter-btn" data-filter="Tops">Tops</button>
+      <button class="filter-btn" data-filter="Bottoms">Bottoms</button>
+      <button class="filter-btn" data-filter="Dresses">Dresses</button>
+      <button class="filter-btn" data-filter="Accessories">Accessories</button>
+    </div>
+
+    <!-- ── Product Grid ── -->
+    <div id="product-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"></div>
+
+    <!-- Empty state -->
+    <p id="empty-state" class="hidden text-center text-muted py-20 text-sm tracking-widest uppercase">
+      No items in this category yet.
+    </p>
+
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       ABOUT STRIP
+  ══════════════════════════════════════════ -->
+  <section id="about" class="border-t border-border bg-offblack">
+    <div class="max-w-7xl mx-auto px-5 md:px-10 py-20 grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <p class="text-muted text-xs uppercase tracking-[0.25em] mb-4">Who We Are</p>
+        <h3 class="font-display text-5xl md:text-6xl text-light leading-none mb-6">
+          SLOW<br/>FASHION,<br/><span class="text-accent">FAST DM.</span>
+        </h3>
+      </div>
+      <div class="text-muted text-sm leading-loose space-y-4 font-light">
+        <p>
+          NoirFinds is a curated thrift catalog born in Algiers. Every piece is hand-selected,
+          photographed, and listed once — no duplicates, no mass stock.
+        </p>
+        <p>
+          We believe pre-owned clothing should feel intentional. Browse the drop, find your
+          piece, and message us directly on WhatsApp to reserve it.
+        </p>
+        <p class="text-accent/80 text-xs uppercase tracking-widest">Simple. Personal. Sustainable.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       CONTACT / FOOTER
+  ══════════════════════════════════════════ -->
+  <footer id="contact" class="border-t border-border">
+    <div class="max-w-7xl mx-auto px-5 md:px-10 py-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-10">
+
+      <div>
+        <p class="font-display text-3xl text-light tracking-widest mb-2">NOIR<span class="text-accent">FINDS</span></p>
+        <p class="text-muted text-xs uppercase tracking-[0.2em]">Algiers, Algeria · Shipping locally</p>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <p class="text-muted text-xs uppercase tracking-widest mb-1">Ready to buy? Hit us on WhatsApp</p>
+        <!-- ✏️  REPLACE number + optionally pre-fill a message -->
+        <a href="https://wa.me/YOUR_NUMBER_HERE?text=Hi!%20I%27m%20interested%20in%20a%20piece%20from%20NoirFinds."
+           target="_blank"
+           class="inline-flex items-center gap-3 bg-accent text-noir font-medium text-sm uppercase tracking-widest px-6 py-3 hover:bg-light transition-colors self-start">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          Open WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <div class="border-t border-border px-5 md:px-10 py-5 flex flex-col md:flex-row justify-between gap-2">
+      <p class="text-muted text-xs">© 2024 NoirFinds. All items sold as-is. One per customer.</p>
+      <p class="text-muted/50 text-xs">Buy via DM only · No cart · No checkout</p>
+    </div>
+  </footer>
+
+
+  <!-- ══════════════════════════════════════════
+       SCRIPT
+  ══════════════════════════════════════════ -->
+  <script>
+    // ─────────────────────────────────────────────────────────
+    // CLOTHING DATA
+    // To add a new item: copy one object, paste it at the end
+    // of the array (before the closing ]), fill in the fields.
+    //
+    // image: paste any direct image URL (jpg, png, webp, etc.)
+    //        Use a square or portrait ratio for best results.
+    //        Leave as "" to show a placeholder gradient.
+    //
+    // category must match one of the filter buttons:
+    //   "Outerwear" | "Denim" | "Tops" | "Bottoms" | "Dresses" | "Accessories"
+    // ─────────────────────────────────────────────────────────
+    const ITEMS = [
+      {
+        id: 1,
+        title: "Oversized Wool Coat",
+        category: "Outerwear",
+        size: "M / L",
+        price: "3 500 DA",
+        condition: "Excellent",
+        image: "",           // ← paste image URL here
+        sold: false,
+      },
+      {
+        id: 2,
+        title: "90s Straight-Leg Jeans",
+        category: "Denim",
+        size: "W28 L30",
+        price: "1 800 DA",
+        condition: "Good",
+        image: "",
+        sold: false,
+      },
+      {
+        id: 3,
+        title: "Linen Blazer — Ecru",
+        category: "Outerwear",
+        size: "S / M",
+        price: "2 200 DA",
+        condition: "Like New",
+        image: "",
+        sold: false,
+      },
+      {
+        id: 4,
+        title: "Vintage Band Tee",
+        category: "Tops",
+        size: "M",
+        price: "900 DA",
+        condition: "Good",
+        image: "",
+        sold: false,
+      },
+      {
+        id: 5,
+        title: "Flared Corduroy Pants",
+        category: "Bottoms",
+        size: "W27",
+        price: "2 000 DA",
+        condition: "Good",
+        image: "",
+        sold: true,          // ← marks as SOLD
+      },
+      {
+        id: 6,
+        title: "Slip Midi Dress — Olive",
+        category: "Dresses",
+        size: "S",
+        price: "2 700 DA",
+        condition: "Excellent",
+        image: "",
+        sold: false,
+      },
+    ];
+
+    // ─────────────────────────────────────────────────────────
+    // WHATSAPP NUMBER — set once here, applies to every button
+    // Format: country code + number, no spaces, no +
+    // Example Algeria: 213661234567
+    // ─────────────────────────────────────────────────────────
+    const WHATSAPP_NUMBER = "YOUR_NUMBER_HERE";
+
+    // ─────────────────────────────────────────────────────────
+    // Render
+    // ─────────────────────────────────────────────────────────
+
+    // Placeholder gradient colours per category
+    const GRADIENTS = {
+      "Outerwear":   ["#1a1612","#2d2419"],
+      "Denim":       ["#111622","#1a2233"],
+      "Tops":        ["#171217","#261e26"],
+      "Bottoms":     ["#121712","#1d2618"],
+      "Dresses":     ["#1a1217","#2a1c22"],
+      "Accessories": ["#171612","#26231c"],
+    };
+
+    function buildCard(item) {
+      const waMsg = encodeURIComponent(`Hi! I'm interested in the ${item.title} (${item.size}) listed on NoirFinds.`);
+      const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${waMsg}`;
+
+      const [g1, g2] = GRADIENTS[item.category] || ["#161616","#1e1e1e"];
+
+      const imgHtml = item.image
+        ? `<img src="${item.image}" alt="${item.title}"
+               class="item-img w-full h-full object-cover object-top" loading="lazy" />`
+        : `<div class="item-img w-full h-full flex flex-col items-center justify-center"
+               style="background: linear-gradient(145deg, ${g1} 0%, ${g2} 100%)">
+             <span class="text-[10px] uppercase tracking-[0.3em] text-muted/50 mt-auto mb-6">No photo yet</span>
+           </div>`;
+
+      const soldOverlay = item.sold
+        ? `<div class="absolute inset-0 bg-noir/75 flex items-center justify-center">
+             <span class="font-display text-3xl tracking-widest text-muted/70">SOLD</span>
+           </div>`
+        : '';
+
+      const btn = item.sold
+        ? `<button disabled
+               class="w-full py-2.5 text-xs uppercase tracking-widest font-medium bg-border text-muted/40 cursor-not-allowed">
+             Sold Out
+           </button>`
+        : `<a href="${waLink}" target="_blank"
+              class="block w-full py-2.5 text-xs uppercase tracking-widest font-medium text-center
+                     border border-accent/50 text-accent hover:bg-accent hover:text-noir transition-all">
+             Buy via DM
+           </a>`;
+
+      return `
+        <div class="product-card bg-card border border-border flex flex-col overflow-hidden
+                    hover:border-accent/30 transition-colors"
+             data-category="${item.category}">
+
+          <!-- Image -->
+          <div class="card-wrap relative overflow-hidden aspect-[3/4] bg-[#111]">
+            ${imgHtml}
+            ${soldOverlay}
+            <!-- Category tag -->
+            <span class="absolute top-3 left-3 bg-noir/80 backdrop-blur text-accent text-[10px]
+                         uppercase tracking-widest px-2.5 py-1 border border-accent/20">
+              ${item.category}
+            </span>
+          </div>
+
+          <!-- Info -->
+          <div class="flex flex-col flex-1 p-4 gap-3">
+            <div class="flex-1">
+              <h3 class="text-sm font-medium text-light leading-snug mb-1">${item.title}</h3>
+              <div class="flex items-center gap-2 text-[11px] text-muted">
+                <span>Size ${item.size}</span>
+                <span class="text-border">·</span>
+                <span>${item.condition}</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-xl text-accent tracking-wide">${item.price}</span>
+            </div>
+            ${btn}
+          </div>
+        </div>`;
+    }
+
+    function renderGrid(filter = "all") {
+      const grid  = document.getElementById("product-grid");
+      const empty = document.getElementById("empty-state");
+      const visible = filter === "all"
+        ? ITEMS
+        : ITEMS.filter(i => i.category === filter);
+
+      if (visible.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove("hidden");
+      } else {
+        empty.classList.add("hidden");
+        grid.innerHTML = visible.map(buildCard).join("");
+      }
+    }
+
+    // Filter buttons
+    document.addEventListener("DOMContentLoaded", () => {
+      renderGrid();
+
+      // Style filter pills
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.add(
+          "px-4","py-1.5","text-xs","uppercase","tracking-widest",
+          "border","border-border","text-muted","font-medium",
+          "hover:border-accent/50","hover:text-light","transition-all","cursor-pointer"
+        );
+      });
+
+      document.getElementById("filter-bar").addEventListener("click", e => {
+        const btn = e.target.closest(".filter-btn");
+        if (!btn) return;
+
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        renderGrid(btn.dataset.filter);
+      });
+    });
+  </script>
+
+</body>
+</html>
